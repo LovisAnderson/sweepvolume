@@ -1,4 +1,4 @@
-#*****************************************************************************
+# *****************************************************************************
 #       Copyright (C) 2017-2018 Lovis Anderson  <lovisanderson@gmail.com>
 #                     2017-2018 Benjamin Hiller <hiller@zib.de>
 #
@@ -6,7 +6,7 @@
 #  as published by the Free Software Foundation; either version 3 of
 #  the License, or (at youroption) any later version.
 #                  http://www.gnu.org/licenses/
-#*****************************************************************************
+# *****************************************************************************
 import numpy as np
 from event import Event
 
@@ -73,8 +73,9 @@ class Sweep(object):
     def calculate_volume(self, lam=None):
         """"
         Calculates the sweep volume
-        :param lam: gives together with the sweep-direction the halfspace up too which the volume is calculated
-        :return: the volume
+        :param lam: gives together with the sweep-direction the halfspace,
+                    up too which the volume is calculated
+        :return: the volume up to hyperplane given by self.sweep_plane and lam
         """
         if len(self.sorted_events) == 0:
             return 0
@@ -85,8 +86,8 @@ class Sweep(object):
             lam_i = self.sorted_events[i][1]
             if lam < lam_i:
                 break
-            vol += self.gammas[i]* (lam - lam_i) ** self.dimension
-        return np.reciprocal(float(np.math.factorial(self.dimension))) *vol
+            vol += self.gammas[i] * (lam - lam_i) ** self.dimension
+        return np.reciprocal(float(np.math.factorial(self.dimension))) * vol
 
     def calculate_volumes(self, lambdas):
         f = []
@@ -94,7 +95,8 @@ class Sweep(object):
             lam_i = self.sorted_events[i][1]
             f.append(np.piecewise(lambdas,
                                   [lambdas > lam_i],
-                                  [lambda lambdas: self.gammas[i] * np.power((lambdas - lam_i), self.dimension)]))
+                                  [lambda lambdas: self.gammas[i] * np.power((lambdas - lam_i),
+                                                                             self.dimension)]))
         return np.reciprocal(float(np.math.factorial(self.dimension))) * np.sum(f, axis=0)
 
     def graphviz_graph(self, contract=True):
@@ -105,7 +107,7 @@ class Sweep(object):
             id = str(hash(event))
             node = dot.node(id, '{}'.format(event.incident_polytopes))
         for edge in edges:
-            dot.edge(*[str(hash(edge[i])) for i in [0,1]])
+            dot.edge(*[str(hash(edge[i])) for i in [0, 1]])
         return dot
 
     def graph(self, contract=True):
@@ -120,7 +122,8 @@ class Sweep(object):
     def nodes_and_edges(self, contract=True):
         """
         Method creates lists of nodes, edges that build sweep-plane graph
-        :param contract: Boolean that if sets to true contracts nodes that have same incidences as predecessor
+        :param contract: Boolean that if sets to true contracts nodes that have same incidences as
+                         predecessor
         :return: nodes, edges: nodes is a list of vertices, edges a list of tuples (vertex, vertex)
         """
         polytope_last_event = {}
@@ -132,7 +135,8 @@ class Sweep(object):
             for incidence in event.incident_polytopes:
                 last_node = polytope_last_event.get(incidence)
                 if last_node:
-                    if contract and set(event.incident_polytopes) == set(last_node.incident_polytopes):
+                    if contract and set(event.incident_polytopes) == set(
+                            last_node.incident_polytopes):
                         continue
                     event_edges.append((last_node, event))
                 nodes.add(event)

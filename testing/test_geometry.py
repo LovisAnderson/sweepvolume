@@ -1,4 +1,4 @@
-#*****************************************************************************
+# *****************************************************************************
 #       Copyright (C) 2017-2018 Lovis Anderson  <lovisanderson@gmail.com>
 #                     2017-2018 Benjamin Hiller <hiller@zib.de>
 #
@@ -6,7 +6,7 @@
 #  as published by the Free Software Foundation; either version 3 of
 #  the License, or (at youroption) any later version.
 #                  http://www.gnu.org/licenses/
-#*****************************************************************************
+# *****************************************************************************
 import numpy as np
 
 

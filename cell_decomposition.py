@@ -1,4 +1,4 @@
-#*****************************************************************************
+# *****************************************************************************
 #       Copyright (C) 2017-2018 Lovis Anderson  <lovisanderson@gmail.com>
 #                     2017-2018 Benjamin Hiller <hiller@zib.de>
 #
@@ -6,7 +6,7 @@
 #  as published by the Free Software Foundation; either version 3 of
 #  the License, or (at youroption) any later version.
 #                  http://www.gnu.org/licenses/
-#*****************************************************************************
+# *****************************************************************************
 import copy
 import itertools
 import logging
@@ -21,6 +21,7 @@ from geometry import Hyperplane, Polytope, Cone
 
 from event import Event
 
+
 class Cell_Decomposition(object):
     def __init__(self,
                  hyperplanes,
@@ -29,11 +30,12 @@ class Cell_Decomposition(object):
         """
          Constructor for cell_decomposition object
         :param hyperplanes: List of hyperplane objects
-        :param polytope_vectors: List of list of tuples (index,position), whereby index specifies index of
-                                 hyperplane in hyperplanes and position specifies halfspace in which polytope lies.
+        :param polytope_vectors: List of list of tuples (index,position), whereby index specifies
+                                 index of hyperplane in hyperplanes and position specifies
+                                 halfspace in which polytope lies.
         :param bounding_box: Bounding box in which all polytopes are included.
-                             Given as list (length dimension) of lists (length 2) which give lower bound upper bound
-                             for each dimension.
+                             Given as list (length dimension) of lists (length 2) which give lower
+                             bound upper bound for each dimension.
         """
         """
        
@@ -88,7 +90,7 @@ class Cell_Decomposition(object):
 
     def solve_les(self, hyperplane_indices):
         hyperplanes = self.hyperplanes[np.array(hyperplane_indices)]
-        p = Polytope(zip(hyperplanes, [0]*self.dimension))
+        p = Polytope(zip(hyperplanes, [0] * self.dimension))
         if len(p.vertices) == 1:
             return p.vertices[0]
         else:
@@ -150,20 +152,20 @@ class Cell_Decomposition(object):
                         continue
                     cones += self.regularize_cone(cone, event.vertex)
                 else:
-                    cone = [(self.hyperplanes[halfspace[0]],halfspace[1]) for halfspace in cone]
+                    cone = [(self.hyperplanes[halfspace[0]], halfspace[1]) for halfspace in cone]
                     cones.append(Cone(cone, incidences=incidence_dict))
         # remove neutralizing vertex cones only when all cones are regular.
         if self.dimension == len(event.incidences):
             cones = self.remove_neutralizing_vertex_cones(cones)
         return cones
 
-
     @staticmethod
     def remove_neutralizing_vertex_cones(cones):
         """
-        If a vertex has two cones whose position vectors differ at exactly one entry their contribution to the volume is
-        together 0. We therefor remove them from the list of cones.
-        Typical case in 2d is  -> _|_ <-where the vertex is on the crossing and the two cones are left and right.
+        If a vertex has two cones whose position vectors differ at exactly one entry their
+        contribution to the volume is together 0. We therefor remove them from the list of cones.
+        Typical case in 2d is  -> _|_ <-where the vertex is on the crossing and the two cones are
+        left and right.
         :param cones:
         :return: list without cancelled out vertex cones
         """
@@ -205,10 +207,11 @@ class Cell_Decomposition(object):
         """
 
         polytope_vertices = [vertex]
-        polytope_halfspaces = [(self.hyperplanes[index], orientation) for index, orientation in
-                               cone[:self.dimension]]
+        polytope_halfspaces = [(self.hyperplanes[index], orientation)
+                               for index, orientation in cone[:self.dimension]]
         for hyperplane_index, orientation in cone[self.dimension:]:
-            halfspace = self.compute_halfspace_shift([self.hyperplanes[hyperplane_index], orientation], polytope_vertices)
+            halfspace = self.compute_halfspace_shift(
+                [self.hyperplanes[hyperplane_index], orientation], polytope_vertices)
             polytope_halfspaces.append(halfspace)
             polytope_vertices = Polytope(polytope_halfspaces).vertices
         hyperplanes = [hyperplane for hyperplane, orientation in polytope_halfspaces]
@@ -218,7 +221,8 @@ class Cell_Decomposition(object):
     def first_rows_independent(self, halfspaces):
         """
         Method orders halfspaces s.t. the first d have independent normals
-        :param halfspaces: halfspaces that correspond to cone as list of tuples (halfspace_index, orientation)
+        :param halfspaces: halfspaces that correspond to cone as list of tuples
+                          (halfspace_index, orientation)
         :return: halfspaces ordered s.t. the first d have independent normals
         """
         first = []
@@ -232,13 +236,13 @@ class Cell_Decomposition(object):
                 first.append(halfspaces[index])
             else:
                 last.append(halfspaces[index])
-        return first+last
+        return first + last
 
     @staticmethod
     def compute_halfspace_shift(halfspace, vertices):
         """
-        Method computes shifted hyperplane for regularization. New halfspaces contains all vertices in its interior,
-        but has the same normal vector as input halfspace
+        Method computes shifted hyperplane for regularization. New halfspaces contains all vertices
+         in its interior, but has the same normal vector as input halfspace
         :param halfspace: A tuple (Hyperplane, orientation)
         :param vertices: list of vertices to be contained in open halfspace
         :return: Tuple of (Hyperplane, orientation)
@@ -269,7 +273,7 @@ class Cell_Decomposition(object):
         hyperplane_is_new = True
         if len(index[0]) == 0:
             self.hyperplanes = np.append(self.hyperplanes, hyperplane)
-            index = len(self.hyperplanes) -1
+            index = len(self.hyperplanes) - 1
             self.nr_of_hyperplanes += 1
         else:
             index = index[0][0]
@@ -310,7 +314,7 @@ class Cell_Decomposition(object):
         # iterate over all combinations of d hyperplanes that contain the given hyperplane
         hyperplane_indices = set(range(self.nr_of_hyperplanes))
         hyperplane_indices.remove(halfspace[0])
-        for combination in itertools.combinations(hyperplane_indices, self.dimension-1):
+        for combination in itertools.combinations(hyperplane_indices, self.dimension - 1):
             combination = np.append(np.array(combination), halfspace[0])
             x = self.solve_les(combination)
             if x is None or not self.inside_bbox(x):
@@ -330,8 +334,9 @@ class Cell_Decomposition(object):
 
     def _restrict_event_to_halfspace(self, event, halfspace, hyperplane_is_new):
         """
-        Method is refreshing event for new halfspace. Event is removed if it lies on the other side of the hyperplane.
-        Incidences and cones are actualized if it lies on the hyperplane and hyperplane is new.
+        Method is refreshing event for new halfspace. Event is removed if it lies on the other side
+        of the hyperplane. Incidences and cones are actualized if it lies on the hyperplane and
+        hyperplane is new.
         :param event: An Event
         :param halfspace: New halfspace as tuple (hyperplane_index, orientation)
         :param hyperplane_is_new: Boolean
@@ -404,5 +409,3 @@ def cd_from_json(path):
                                cd_dict['hyperplanes']))
     polytopes = cd_dict['polytope_vectors']
     return Cell_Decomposition(hyperplanes, polytopes)
-
-

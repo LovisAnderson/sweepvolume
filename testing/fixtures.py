@@ -1,4 +1,4 @@
-#*****************************************************************************
+# *****************************************************************************
 #       Copyright (C) 2017-2018 Lovis Anderson  <lovisanderson@gmail.com>
 #                     2017-2018 Benjamin Hiller <hiller@zib.de>
 #
@@ -6,7 +6,7 @@
 #  as published by the Free Software Foundation; either version 3 of
 #  the License, or (at youroption) any later version.
 #                  http://www.gnu.org/licenses/
-#*****************************************************************************
+# *****************************************************************************
 import pytest
 from ..geometry import Hyperplane
 import numpy as np
@@ -82,7 +82,6 @@ def cube_simplex_overlapping_3d():
     c_4 = Hyperplane(np.array([0, 1, 0]), -1)
     c_5 = Hyperplane(np.array([0, 0, 1]), -1)
 
-
     s_0 = Hyperplane(np.array([1, 1, 1]), -2.)
     s_1 = Hyperplane(np.array([1, 0, 0]), -0.5)
     s_2 = Hyperplane(np.array([0, 1, 0]), -0.5)
@@ -120,10 +119,10 @@ def cube_simplex_overlapping_3d_imprecise():
     c_4 = Hyperplane(np.array([0, k, 0]), -k)
     c_5 = Hyperplane(np.array([0, 0, k]), -k)
 
-    s_0 = Hyperplane(np.array([k, k, k]), -3.5*k)
-    s_1 = Hyperplane(np.array([k, 0, 0]), -0.5*k)
-    s_2 = Hyperplane(np.array([0, k, 0]), -0.5*k)
-    s_3 = Hyperplane(np.array([0, 0, k]), -0.5*k)
+    s_0 = Hyperplane(np.array([k, k, k]), -3.5 * k)
+    s_1 = Hyperplane(np.array([k, 0, 0]), -0.5 * k)
+    s_2 = Hyperplane(np.array([0, k, 0]), -0.5 * k)
+    s_3 = Hyperplane(np.array([0, 0, k]), -0.5 * k)
 
     hyperplanes = [c_0, c_1, c_2, c_3, c_4, c_5, s_0, s_1, s_2, s_3]
 
@@ -153,12 +152,12 @@ def cube_simplex_overlapping_2d():
 def unbounded_non_regular():
     a_0 = Hyperplane(np.array([-1, 1]), 0)
     a_1 = Hyperplane(np.array([1, 1]), 0)
-    a_2 = Hyperplane(np.array([-(1/2), -1]), 0)
-    a_3 = Hyperplane(np.array([1/2, -1]), 0)
+    a_2 = Hyperplane(np.array([-(1 / 2), -1]), 0)
+    a_3 = Hyperplane(np.array([1 / 2, -1]), 0)
 
     hyperplanes = [a_0, a_1, a_2, a_3]
 
-    left_poly = {(1,-1), (2, -1)}
+    left_poly = {(1, -1), (2, -1)}
     right_poly = {(0, -1), (3, -1)}
     return Cell_Decomposition(hyperplanes, [left_poly, right_poly])
 
@@ -205,10 +204,11 @@ def overlapping_simplices():
     s_7 = Hyperplane(np.array([1, 1, -1]), 0)
 
     hyperplanes = [s_0, s_1, s_2, s_3, s_4, s_5, s_6, s_7]
-    simplex_1 = {(0,1), (1, 1), (2, 1), (3, -1)}
+    simplex_1 = {(0, 1), (1, 1), (2, 1), (3, -1)}
     simplex_2 = {(4, -1), (5, 1), (6, 1), (7, -1)}
 
     return Cell_Decomposition(hyperplanes, [simplex_1, simplex_2])
+
 
 @pytest.fixture
 def overlapping_simplices_2():
@@ -223,10 +223,11 @@ def overlapping_simplices_2():
     s_7 = Hyperplane(np.array([1, 1, -1]), -3)
 
     hyperplanes = [s_0, s_1, s_2, s_3, s_4, s_5, s_6, s_7]
-    simplex_1 = {(0,1), (1, 1), (2, 1), (3, -1)}
+    simplex_1 = {(0, 1), (1, 1), (2, 1), (3, -1)}
     simplex_2 = {(4, -1), (5, 1), (6, 1), (7, -1)}
     polytopes = [simplex_1, simplex_2]
     return Cell_Decomposition(hyperplanes, polytopes)
+
 
 @pytest.fixture
 def hole_2d():
@@ -261,7 +262,8 @@ def hole_2d():
     P4 = set(zip(range(12, 16), [-1] * 4))
 
     hyperplanes = [p1, p2, p3, p4, q1, q2, q3, q4, r1, r2, r3, r4, s1, s2, s3, s4]
-    return(Cell_Decomposition(hyperplanes, [P1, P2, P3, P4]))
+    return (Cell_Decomposition(hyperplanes, [P1, P2, P3, P4]))
+
 
 @pytest.fixture
 def hole_3d():
@@ -287,7 +289,7 @@ def hole_3d():
     q2 = Hyperplane(a2, 0)
     q3 = Hyperplane(a3, 0)
     q4 = Hyperplane(a4, -1)
-    P2 = set(zip(range(2), [-1] * 2) + zip(range(6, 10), [-1]*4))
+    P2 = set(zip(range(2), [-1] * 2) + zip(range(6, 10), [-1] * 4))
 
     r1 = Hyperplane(a1, -2)
     r2 = Hyperplane(a2, 1)
@@ -303,6 +305,7 @@ def hole_3d():
     hyperplanes = [p0, p1, p2, p3, p4, p5, q1, q2, q3, q4, r1, r2, r3, r4, s1, s2, s3, s4]
 
     return Cell_Decomposition(hyperplanes, [P1, P2, P3, P4])
+
 
 @pytest.fixture
 def hole_4d():
@@ -333,7 +336,7 @@ def hole_4d():
     q2 = Hyperplane(a2, 0)
     q3 = Hyperplane(a3, 0)
     q4 = Hyperplane(a4, -1)
-    P2 = set(zip(range(4), [-1] * 4) + zip(range(8, 12), [-1]*4))
+    P2 = set(zip(range(4), [-1] * 4) + zip(range(8, 12), [-1] * 4))
 
     r1 = Hyperplane(a1, -2)
     r2 = Hyperplane(a2, 1)
@@ -349,6 +352,7 @@ def hole_4d():
     hyperplanes = [p0, p1, p2, p3, p4, p5, p6, p7, q1, q2, q3, q4, r1, r2, r3, r4, s1, s2, s3, s4]
 
     return Cell_Decomposition(hyperplanes, [P1, P2, P3, P4])
+
 
 @pytest.fixture
 def simplex_cube_disconnected():

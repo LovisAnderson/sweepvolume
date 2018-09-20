@@ -1,4 +1,4 @@
-#*****************************************************************************
+# *****************************************************************************
 #       Copyright (C) 2017-2018 Lovis Anderson  <lovisanderson@gmail.com>
 #                     2017-2018 Benjamin Hiller <hiller@zib.de>
 #
@@ -6,7 +6,7 @@
 #  as published by the Free Software Foundation; either version 3 of
 #  the License, or (at youroption) any later version.
 #                  http://www.gnu.org/licenses/
-#*****************************************************************************
+# *****************************************************************************
 from ..cell_decomposition import Cell_Decomposition
 from ..sweep import Sweep
 from ..geometry import Hyperplane
@@ -34,7 +34,7 @@ def test_halfspace_restriction():
 
 
 def test_halfspace_restriction_2():
-    a_0 = Hyperplane(np.array([1, 0,]), 0)
+    a_0 = Hyperplane(np.array([1, 0, ]), 0)
     a_1 = Hyperplane(np.array([0, 1]), 0)
     a_2 = Hyperplane(np.array([1, 1]), -1)
     a_3 = Hyperplane(np.array([1, 0]), -1)
@@ -52,13 +52,14 @@ def test_halfspace_restriction_2():
 
     assert set(cd.events).issubset(set(cd1.events))
     assert set(cd1.events).issubset(set(cd.events))
-    assert round(Sweep(cd.events).calculate_volume(),8) == round(Sweep(cd1.events).calculate_volume(),8)
+    assert round(Sweep(cd.events).calculate_volume(), 8) == round(
+        Sweep(cd1.events).calculate_volume(), 8)
 
 
 def test_halfspace_restriction_3(translated_triangles):
     a = Hyperplane(np.array([1., 0., ]), 0.)
     translated_triangles.restrict_to_halfspace(a, 1)
-    assert(len(translated_triangles.events))==3
+    assert (len(translated_triangles.events)) == 3
     s = Sweep(translated_triangles.events)
     assert round(s.calculate_volume(), 6) == 0.25
 
@@ -66,8 +67,9 @@ def test_halfspace_restriction_3(translated_triangles):
 def test_halfspace_restriction_4():
     """
     Halfspace restriction can create new events even if hyperplane is already in cd.hyperplanes.
-    Case: From two vertex cones that neutralized each other in original cd only one is valid in restricted cd.
-    here vertex at (0,1) is not part of original cd but of restricted cd.
+    Case: From two vertex cones that neutralized each other in original cd only one is valid in
+    restricted cd.
+    Here vertex at (0,1) is not part of original cd but of restricted cd.
     """
     a_0 = Hyperplane(np.array([1, 0, ]), 0)
     a_1 = Hyperplane(np.array([0, 1]), 0)
@@ -84,21 +86,21 @@ def test_halfspace_restriction_4():
     cube_2 = {(4, 1), (5, 1), (6, -1), (7, -1)}
 
     cube_2_restricted = {(4, 1), (5, 1), (6, -1), (7, -1), (3, -1)}
-    cd = Cell_Decomposition(hyperplanes,[cube_1, cube_2])
+    cd = Cell_Decomposition(hyperplanes, [cube_1, cube_2])
     cd.restrict_to_halfspace(a_3, -1)
     s = Sweep(cd.events)
-    cd2 = Cell_Decomposition(hyperplanes,[cube_1, cube_2_restricted])
+    cd2 = Cell_Decomposition(hyperplanes, [cube_1, cube_2_restricted])
     s2 = Sweep(cd2.events)
     assert round(s2.calculate_volume(), 5) == 1.25
-    assert round(s.calculate_volume(),5) == 1.25
+    assert round(s.calculate_volume(), 5) == 1.25
 
 
 def test_both_halfspace_restriction(simplex_in_cube):
     '''
-    test restricts cell decomposition to other halfspace of shared hyperplane of simplex and unit cube.
-    All events lay on the hyperplane or outside of the restriction halfspace.
+    test restricts cell decomposition to other halfspace of shared hyperplane of simplex and
+    unit cube. All events lay on the hyperplane or outside of the restriction halfspace.
     No cone can be legal for events on the halfspace.
     '''
-    cut_plane = Hyperplane(np.array([1,0]), 1)
+    cut_plane = Hyperplane(np.array([1, 0]), 1)
     simplex_in_cube.restrict_to_halfspace(cut_plane, -1)
     assert len(simplex_in_cube.events) == 0

@@ -1,4 +1,4 @@
-#*****************************************************************************
+# *****************************************************************************
 #       Copyright (C) 2017-2018 Lovis Anderson  <lovisanderson@gmail.com>
 #                     2017-2018 Benjamin Hiller <hiller@zib.de>
 #
@@ -6,7 +6,7 @@
 #  as published by the Free Software Foundation; either version 3 of
 #  the License, or (at youroption) any later version.
 #                  http://www.gnu.org/licenses/
-#*****************************************************************************
+# *****************************************************************************
 import logging
 
 import numpy as np
@@ -21,6 +21,7 @@ class Hyperplane(object):
     Class for hyperplane object.
     Representation: a1*x1 + ... + ad*xd + b = 0
     """
+
     def __init__(self, a, b):
         assert isinstance(a, np.ndarray)
         self.dimension = a.shape[0]
@@ -39,7 +40,10 @@ class Hyperplane(object):
             return False
 
     def normalize(self):
-        # norm such that norm=1 and b>=0. returns True if hyperplane had to be flipped and False if not
+        """
+        norms hyperplane such that norm=1 and b>=0. returns
+        :return: True if hyperplane had to be flipped and False elsewise
+        """
         if self.b < 0:
             self.a, self.b = -self.a, -self.b
             self.matrix = self.as_matrix()
@@ -54,8 +58,8 @@ class Hyperplane(object):
         k = 1e9
         norm = self.norm()
         self.a = self.a / norm
-        self.a = np.array([round(k*a) for a in self.a])
-        self.b = round(k*(self.b/norm))
+        self.a = np.array([round(k * a) for a in self.a])
+        self.b = round(k * (self.b / norm))
         self.integer = True
 
     def as_matrix(self):
@@ -66,16 +70,16 @@ class Hyperplane(object):
         sigma = np.array([1e-6] * self.dimension)
         covariance = np.diag(sigma ** 2)
         a = np.random.multivariate_normal(self.a / self.a_norm, covariance)
-        return Hyperplane(a, self.b/self.a_norm)
+        return Hyperplane(a, self.b / self.a_norm)
 
-    def __str__( self ):
+    def __str__(self):
         """
         Output method.
         """
 
-        cx = ['{:.0f}*x{}'.format(c,i) for i,c in enumerate(self.a, 1)]
+        cx = ['{:.0f}*x{}'.format(c, i) for i, c in enumerate(self.a, 1)]
 
-        outputStr  = " + ".join(cx)
+        outputStr = " + ".join(cx)
         outputStr += " + {:.0f} == 0".format(self.b)
 
         return outputStr
@@ -105,21 +109,21 @@ class Vertex(object):
 
         self.coordinates = np.array(self.vector) / float(self.denominator)
 
-
     def position(self, hyperplane):
         x = [Variable(i) for i in range(self.dim)]
 
         p = C_Polyhedron(Generator_System(self.ppl))
-        s_rel = p.relation_with(sum(hyperplane.a[i]*x[i] for i in range(self.dim)) + hyperplane.b < 0)
+        s_rel = p.relation_with(
+            sum(hyperplane.a[i] * x[i] for i in range(self.dim)) + hyperplane.b < 0)
         if s_rel.implies(Poly_Con_Relation.is_included()):
             return -1
         else:
-            b_rel = p.relation_with(sum(hyperplane.a[i]*x[i] for i in range(self.dim)) + hyperplane.b > 0)
+            b_rel = p.relation_with(
+                sum(hyperplane.a[i] * x[i] for i in range(self.dim)) + hyperplane.b > 0)
             if b_rel.implies(Poly_Con_Relation.is_included()):
                 return 1
             else:
                 return 0
-
 
     def __hash__(self):
         return hash('<{}/{}>'.format(self.vector, self.denominator))
@@ -130,12 +134,11 @@ class Vertex(object):
     def __str__(self):
         return '[' + ','.join(['{:.3f}'.format(c) for c in self.coordinates]) + ']'
 
-
     @staticmethod
     def vertex_from_coordinates(coordinates):
         x = [Variable(i) for i in range(len(coordinates))]
         denom = 1e+10
-        p = point(sum(x[i] * int(coordinates[i]* denom) for i in range(len(coordinates))), denom)
+        p = point(sum(x[i] * int(coordinates[i] * denom) for i in range(len(coordinates))), denom)
         return Vertex(p)
 
 
@@ -157,7 +160,6 @@ class Cone(object):
     def rays_from_constraints(self, halfspaces):
         # Create PPL variables.
         x = [Variable(i) for i in range(self.dimension)]
-
 
         # Init constraint system.
         constraints = Constraint_System()
@@ -183,7 +185,7 @@ class Cone(object):
         for gen in poly.minimized_generators():
             if gen.is_ray():
                 ray = np.array(gen.coefficients()).astype(float)
-                ray = ray/np.linalg.norm(ray)
+                ray = ray / np.linalg.norm(ray)
                 rays.append(ray)
         return np.array(rays)
 
@@ -201,7 +203,8 @@ class Cone(object):
                 shared_incidences[1].append(orient2)
         if len(shared_incidences[0]) != self.dimension:
             return False
-        # if the vertices differ at exactly 1 entry, the dot product is exactly d-2 (all entries are in {-1,1})
+        # if the vertices differ at exactly 1 entry, the dot product is exactly d-2
+        # that is because all entries are in {-1,1}
         if np.dot(shared_incidences[0], shared_incidences[1]) == self.dimension - 2:
             return True
         return False
@@ -240,7 +243,7 @@ class Polytope(object):
             self.vertices.add(v)
             self.poly = self.poly_from_vertices(vertices)
             self.hyperplanes = self.hyperplanes_from_poly()
-            self.halfspaces = zip(self.hyperplanes, [1]*len(self.hyperplanes))
+            self.halfspaces = zip(self.hyperplanes, [1] * len(self.hyperplanes))
         else:
             self.hyperplanes = []
             self.halfspaces = []
@@ -262,7 +265,6 @@ class Polytope(object):
     def poly_from_constraints(self, halfspaces):
         # Create PPL variables.
         x = [Variable(i) for i in range(self.dimension)]
-
 
         # Init constraint system.
         constraints = Constraint_System()
@@ -299,7 +301,6 @@ class Polytope(object):
         logging.debug('<nr generators: {}>, <nr constraints: {}>'
                       .format(len(self.poly.generators()), len(self.poly.constraints())))
 
-
         hyperplanes = []
 
         # constraints in ppl are saved as of the form ax + b >= 0
@@ -307,7 +308,7 @@ class Polytope(object):
         for constraint in self.poly.minimized_constraints():
             a = np.array(constraint.coefficients()).astype(float)
             b = float(constraint.inhomogeneous_term())
-            hyperplane = Hyperplane(a,b)
+            hyperplane = Hyperplane(a, b)
             hyperplanes.append(hyperplane)
         return hyperplanes
 
@@ -315,11 +316,14 @@ class Polytope(object):
         # Create PPL variables.
         x = [Variable(i) for i in range(self.dimension)]
         if halfspace[1] == -1:
-            self.poly.add_constraint(sum(halfspace[0].a[i] * x[i] for i in range(self.dimension)) + halfspace[0].b <= 0)
+            self.poly.add_constraint(
+                sum(halfspace[0].a[i] * x[i] for i in range(self.dimension)) + halfspace[0].b <= 0)
         elif halfspace[1] == 1:
-            self.poly.add_constraint(sum(halfspace[0].a[i] * x[i] for i in range(self.dimension)) + halfspace[0].b >= 0)
+            self.poly.add_constraint(
+                sum(halfspace[0].a[i] * x[i] for i in range(self.dimension)) + halfspace[0].b >= 0)
         elif halfspace[1] == 0:
-            self.poly.add_constraint(sum(halfspace[0].a[i] * x[i] for i in range(self.dimension)) + halfspace[0].b == 0)
+            self.poly.add_constraint(
+                sum(halfspace[0].a[i] * x[i] for i in range(self.dimension)) + halfspace[0].b == 0)
         self.hyperplanes = self.hyperplanes_from_poly()
         self.halfspaces.append(halfspace)
         self.vertices = self.vertices_from_poly()
@@ -336,6 +340,6 @@ def vector_distance(vector_1, vector_2, absolute_value=True):
     a1_normed = vector_1 / np.linalg.norm(vector_1)
     a2_normed = vector_2 / np.linalg.norm(vector_2)
     if absolute_value:
-        return 1-abs(np.dot(a1_normed, a2_normed))
+        return 1 - abs(np.dot(a1_normed, a2_normed))
     else:
         return 1 - np.dot(a1_normed, a2_normed)

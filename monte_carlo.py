@@ -48,7 +48,8 @@ class MonteCarloVolume(object):
     def random_drawing(self):
         inside_body = 0
         for i in range(self.iterations):
-            point = np.array([np.random.uniform(coordinate[0], coordinate[1]) for coordinate in self.bounding_box])
+            point = np.array([np.random.uniform(coordinate[0], coordinate[1])
+                              for coordinate in self.bounding_box])
             if self._is_legal_point(point):
                 inside_body += 1
         return inside_body

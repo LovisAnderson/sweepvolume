@@ -1,4 +1,4 @@
-#*****************************************************************************
+# *****************************************************************************
 #       Copyright (C) 2017-2018 Lovis Anderson  <lovisanderson@gmail.com>
 #                     2017-2018 Benjamin Hiller <hiller@zib.de>
 #
@@ -6,7 +6,7 @@
 #  as published by the Free Software Foundation; either version 3 of
 #  the License, or (at youroption) any later version.
 #                  http://www.gnu.org/licenses/
-#*****************************************************************************
+# *****************************************************************************
 
 import logging
 from copy import deepcopy
@@ -49,9 +49,9 @@ class Event(object):
 
     def update_polytope_incidences(self, polytope_vectors):
         """
-        Method recomputes polytope incidences if polytope vectors are expanded. Only checks if incidences are still true.
-        For polytope vectors that have changed through halfspace restriction no new incidences can arise but old incidences
-        can vanish
+        Method recomputes polytope incidences if polytope vectors are expanded. Only checks
+        if incidences are still true. For polytope vectors that have changed through halfspace
+        restriction no new incidences can arise but old incidences can vanish.
 
         """
         nr_incidences_before = len(self.incident_polytopes)
@@ -65,10 +65,12 @@ class Event(object):
 
     def vector_matches_position_vector(self, vector):
         """
-        tests if input pos vector matches vertex position vector. For input vector not all position have to be specified.
+        tests if input pos vector matches vertex position vector. For input vector not all
+        position have to be specified.
 
         :param vector: list of tuples (hyperplane_index, orientation)
-        :return:
+        :return: matches: Boolean that indicates if self.position_vector matches
+                          position vector match.
         """
         matches = True
         for hyperplane_index, orientation in vector:
@@ -77,7 +79,6 @@ class Event(object):
             elif self.position_vector[hyperplane_index] != orientation:
                 return False
         return matches
-
 
     def __str__(self):
         return '[' + ','.join(['{:.3f}'.format(c) for c in self.vertex.coordinates]) + ']'

@@ -1,4 +1,4 @@
-#*****************************************************************************
+# *****************************************************************************
 #       Copyright (C) 2017-2018 Lovis Anderson  <lovisanderson@gmail.com>
 #                     2017-2018 Benjamin Hiller <hiller@zib.de>
 #
@@ -6,7 +6,7 @@
 #  as published by the Free Software Foundation; either version 3 of
 #  the License, or (at youroption) any later version.
 #                  http://www.gnu.org/licenses/
-#*****************************************************************************
+# *****************************************************************************
 from scipy.spatial import ConvexHull
 
 from geometry import Polytope
@@ -17,7 +17,6 @@ from mpl_toolkits.mplot3d import Axes3D
 import mpl_toolkits.mplot3d as mpl3D
 import numpy as np
 import pylab as pl
-
 
 # well distinguishable colors
 FACECOLORS = np.array([[0.90196078, 0.09803922, 0.29411765, 0.5],
@@ -40,7 +39,7 @@ FACECOLORS = np.array([[0.90196078, 0.09803922, 0.29411765, 0.5],
                        [1., 0.84313725, 0.70588235, 0.5],
                        [0., 0., 0.50196078, 0.5],
                        [0.50196078, 0.50196078, 0.50196078, 0.5],
-# From This line on colors are just randomly generated
+                       # From This line on colors are just randomly generated
                        [0.95329486, 0.66512501, 0.01362486, 0.5],
                        [0.62528863, 0.67630143, 0.97575655, 0.5],
                        [0.88163737, 0.5116229, 0.05593318, 0.5],
@@ -55,7 +54,7 @@ FACECOLORS = np.array([[0.90196078, 0.09803922, 0.29411765, 0.5],
 
 
 def plot_convex_hull_cell_decompositions(cds, alpha=1.):
-    assert all(len(cd.polytope_vectors)==1 for cd in cds)
+    assert all(len(cd.polytope_vectors) == 1 for cd in cds)
     polytopes_vertices = []
     convex_hulls = []
     facecolors = FACECOLORS
@@ -100,13 +99,12 @@ def plot_convex_hull_cell_decompositions(cds, alpha=1.):
 
     plt.show()
 
+
 def plot_polytopes_and_cut(cd,
                            cuts=None,
                            alpha=0.5,
                            box=None,
                            plot_convex_hull=True, ax=None):
-
-
     polytopes_vertices = []
     convex_hulls = []
     facecolors = FACECOLORS
@@ -132,7 +130,7 @@ def plot_polytopes_and_cut(cd,
         polytopes_vertices.append(convex_hull_vertices)
         FACECOLORS[len(polytopes_vertices) - 1] = (0, 0, 0, 0.2)
 
-    axis_given = not(ax is None)
+    axis_given = not (ax is None)
 
     if cd.dimension == 2:
         polycollection = mpl.collections.PolyCollection(np.array(polytopes_vertices),
