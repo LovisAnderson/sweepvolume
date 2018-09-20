@@ -21,26 +21,26 @@ class Sweep(object):
     def __init__(self, events, sweep_plane=None):
         if not events:
             logging.warning("--Sweep called with no vertices--")
-            self.dimension = 0
+            self.dim = 0
             self.sorted_events = []
         else:
             e = events.pop()
             events.add(e)
-            self.dimension = e.vertex.dim
+            self.dim = e.vertex.dim
             if sweep_plane is not None:
                 self.sweep_plane = sweep_plane
             else:
-                self.sweep_plane = self.random_sweep_plane(self.dimension)
+                self.sweep_plane = self.random_sweep_plane(self.dim)
             # tuple of (event, lambda)
             self.sorted_events = self.sort_events_by_lambda(events)
         self.gammas = []
         self.sweep()
 
     @staticmethod
-    def random_sweep_plane(dimension):
+    def random_sweep_plane(dim):
         np.random.seed(0)
-        random_orientation = np.random.choice([-1, 1], [dimension])
-        return np.random.rand(dimension) * random_orientation
+        random_orientation = np.random.choice([-1, 1], [dim])
+        return np.random.rand(dim) * random_orientation
 
     def sort_events_by_lambda(self, events):
         dtype = [('event', Event), ('lambda', float)]
@@ -86,8 +86,8 @@ class Sweep(object):
             lam_i = self.sorted_events[i][1]
             if lam < lam_i:
                 break
-            vol += self.gammas[i] * (lam - lam_i) ** self.dimension
-        return np.reciprocal(float(np.math.factorial(self.dimension))) * vol
+            vol += self.gammas[i] * (lam - lam_i) ** self.dim
+        return np.reciprocal(float(np.math.factorial(self.dim))) * vol
 
     def calculate_volumes(self, lambdas):
         f = []
@@ -96,8 +96,8 @@ class Sweep(object):
             f.append(np.piecewise(lambdas,
                                   [lambdas > lam_i],
                                   [lambda lambdas: self.gammas[i] * np.power((lambdas - lam_i),
-                                                                             self.dimension)]))
-        return np.reciprocal(float(np.math.factorial(self.dimension))) * np.sum(f, axis=0)
+                                                                             self.dim)]))
+        return np.reciprocal(float(np.math.factorial(self.dim))) * np.sum(f, axis=0)
 
     def graphviz_graph(self, contract=True):
 

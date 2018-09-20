@@ -47,13 +47,13 @@ class Cell_Decomposition(object):
         self.nr_of_hyperplanes = len(hyperplanes)
         self.bbox = bounding_box
         if len(hyperplanes) > 0:
-            self.dimension = hyperplanes[0].dimension
+            self.dim = hyperplanes[0].dim
             self.possible_events = set(self._find_all_possible_events())
             self.events = self.find_events()
         else:
             self.possible_events = {}
             self.events = []
-            self.dimension = 0
+            self.dim = 0
 
     def _find_all_possible_events(self):
 
@@ -63,7 +63,7 @@ class Cell_Decomposition(object):
         """
 
         events = dict()
-        for combination in itertools.combinations(range(self.nr_of_hyperplanes), self.dimension):
+        for combination in itertools.combinations(range(self.nr_of_hyperplanes), self.dim):
             vertex = self.solve_les(combination)
             if vertex is None:
                 continue
@@ -90,7 +90,7 @@ class Cell_Decomposition(object):
 
     def solve_les(self, hyperplane_indices):
         hyperplanes = self.hyperplanes[np.array(hyperplane_indices)]
-        p = Polytope(zip(hyperplanes, [0] * self.dimension))
+        p = Polytope(zip(hyperplanes, [0] * self.dim))
         if len(p.vertices) == 1:
             return p.vertices[0]
         else:
@@ -143,7 +143,7 @@ class Cell_Decomposition(object):
                 cone_pos_vector[incidences[i]] = combination[i]
                 cone.append((incidences[i], combination[i]))
             if self.is_legal_cone(cone_pos_vector, event):
-                if len(event.incidences) > self.dimension:
+                if len(event.incidences) > self.dim:
                     # Test if cone is empty, if so we can skip it
                     halfspaces = [(self.hyperplanes[index], orientation)
                                   for index, orientation in cone]
@@ -155,7 +155,7 @@ class Cell_Decomposition(object):
                     cone = [(self.hyperplanes[halfspace[0]], halfspace[1]) for halfspace in cone]
                     cones.append(Cone(cone, incidences=incidence_dict))
         # remove neutralizing vertex cones only when all cones are regular.
-        if self.dimension == len(event.incidences):
+        if self.dim == len(event.incidences):
             cones = self.remove_neutralizing_vertex_cones(cones)
         return cones
 
@@ -208,8 +208,8 @@ class Cell_Decomposition(object):
 
         polytope_vertices = [vertex]
         polytope_halfspaces = [(self.hyperplanes[index], orientation)
-                               for index, orientation in cone[:self.dimension]]
-        for hyperplane_index, orientation in cone[self.dimension:]:
+                               for index, orientation in cone[:self.dim]]
+        for hyperplane_index, orientation in cone[self.dim:]:
             halfspace = self.compute_halfspace_shift(
                 [self.hyperplanes[hyperplane_index], orientation], polytope_vertices)
             polytope_halfspaces.append(halfspace)
@@ -229,7 +229,7 @@ class Cell_Decomposition(object):
         last = []
         mat = np.array([self.hyperplanes[hyperplane_ind].a for hyperplane_ind, _ in halfspaces])
         _, inds = sympy.Matrix(mat).T.rref()
-        if len(inds) != self.dimension:
+        if len(inds) != self.dim:
             logging.warning('Not d many linear independent normals in regularization step')
         for index in range(len(halfspaces)):
             if index in inds:
@@ -314,7 +314,7 @@ class Cell_Decomposition(object):
         # iterate over all combinations of d hyperplanes that contain the given hyperplane
         hyperplane_indices = set(range(self.nr_of_hyperplanes))
         hyperplane_indices.remove(halfspace[0])
-        for combination in itertools.combinations(hyperplane_indices, self.dimension - 1):
+        for combination in itertools.combinations(hyperplane_indices, self.dim - 1):
             combination = np.append(np.array(combination), halfspace[0])
             x = self.solve_les(combination)
             if x is None or not self.inside_bbox(x):
@@ -370,7 +370,7 @@ class Cell_Decomposition(object):
             'hyperplanes': hyperplanes,
             'events': events,
             'polytope_vectors': (map(lambda p: list(p), self.polytope_vectors)),
-            'dimension': self.dimension
+            'dimension': self.dim
         }
         return cd_dict
 
@@ -390,7 +390,7 @@ class Cell_Decomposition(object):
         # We override the copy function to make a halfway deepcopy
         # Some attributes are fixed and do not need a deepcopy
         from copy import copy, deepcopy
-        fixed_attributes = ['dimension', 'bbox']
+        fixed_attributes = ['dim', 'bbox']
         cls = self.__class__
         result = cls.__new__(cls)
         memo[id(self)] = result

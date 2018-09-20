@@ -73,7 +73,7 @@ def plot_convex_hull_cell_decompositions(cds, alpha=1.):
             facecolors = np.delete(facecolors, i, 0)
             continue
     facecolors[:, -1] = alpha
-    if cds[0].dimension == 2:
+    if cds[0].dim == 2:
         polycollection = mpl.collections.PolyCollection(np.array(polytopes_vertices),
                                                         facecolors=facecolors)
         fig, ax = plt.subplots(figsize=(7, 7))
@@ -86,7 +86,7 @@ def plot_convex_hull_cell_decompositions(cds, alpha=1.):
         axes.set_xlim(limits[0])
         axes.set_ylim(limits[1])
 
-    elif cd.dimension == 3:
+    elif cd.dim == 3:
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
 
@@ -132,7 +132,7 @@ def plot_polytopes_and_cut(cd,
 
     axis_given = not (ax is None)
 
-    if cd.dimension == 2:
+    if cd.dim == 2:
         polycollection = mpl.collections.PolyCollection(np.array(polytopes_vertices),
                                                         facecolors=facecolors)
         if ax is None:
@@ -157,7 +157,7 @@ def plot_polytopes_and_cut(cd,
                     x = (-cut.b - cut.a[1] * y) / cut.a[0]
                 plt.plot(x, y, color='k', linewidth=4.)
 
-    elif cd.dimension == 3:
+    elif cd.dim == 3:
 
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')

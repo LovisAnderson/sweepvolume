@@ -20,7 +20,7 @@ def test_unit_cube(unit_cube):
 
 def test_simplex(simplex):
     s = Sweep(simplex.events)
-    assert round(s.calculate_volume(), 8) == round(1. / np.math.factorial(simplex.dimension), 8)
+    assert round(s.calculate_volume(), 8) == round(1. / np.math.factorial(simplex.dim), 8)
 
 
 def test_non_regular_overlapping(cube_simplex_overlapping_3d):

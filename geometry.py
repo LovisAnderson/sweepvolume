@@ -24,7 +24,7 @@ class Hyperplane(object):
 
     def __init__(self, a, b):
         assert isinstance(a, np.ndarray)
-        self.dimension = a.shape[0]
+        self.dim = a.shape[0]
         self.a = a
         self.b = b
         if not (all([float(a_i).is_integer() for a_i in a]) and float(b).is_integer()):
@@ -67,7 +67,7 @@ class Hyperplane(object):
         return sympy.Matrix(self.a)
 
     def pertubate(self):
-        sigma = np.array([1e-6] * self.dimension)
+        sigma = np.array([1e-6] * self.dim)
         covariance = np.diag(sigma ** 2)
         a = np.random.multivariate_normal(self.a / self.a_norm, covariance)
         return Hyperplane(a, self.b / self.a_norm)
@@ -148,7 +148,7 @@ class Cone(object):
             self.halfspaces = halfspaces
         else:
             self.halfspaces = None
-        self.dimension = halfspaces[0][0].dimension
+        self.dim = halfspaces[0][0].dim
         self.vertex = None
         self.rays = self.rays_from_constraints(halfspaces)
         self.determinant = self.compute_determinant()
@@ -159,7 +159,7 @@ class Cone(object):
 
     def rays_from_constraints(self, halfspaces):
         # Create PPL variables.
-        x = [Variable(i) for i in range(self.dimension)]
+        x = [Variable(i) for i in range(self.dim)]
 
         # Init constraint system.
         constraints = Constraint_System()
@@ -172,11 +172,11 @@ class Cone(object):
             # coordinates are scaled and truncated.
 
             if orient == -1:
-                constraints.insert(sum(hyp.a[i] * x[i] for i in range(self.dimension)) + hyp.b <= 0)
+                constraints.insert(sum(hyp.a[i] * x[i] for i in range(self.dim)) + hyp.b <= 0)
             elif orient == 1:
-                constraints.insert(sum(hyp.a[i] * x[i] for i in range(self.dimension)) + hyp.b >= 0)
+                constraints.insert(sum(hyp.a[i] * x[i] for i in range(self.dim)) + hyp.b >= 0)
             elif orient == 0:
-                constraints.insert(sum(hyp.a[i] * x[i] for i in range(self.dimension)) + hyp.b == 0)
+                constraints.insert(sum(hyp.a[i] * x[i] for i in range(self.dim)) + hyp.b == 0)
 
         # Build PPL polyhedra.
         poly = C_Polyhedron(constraints)
@@ -201,11 +201,11 @@ class Cone(object):
             if orient2:
                 shared_incidences[0].append(orient)
                 shared_incidences[1].append(orient2)
-        if len(shared_incidences[0]) != self.dimension:
+        if len(shared_incidences[0]) != self.dim:
             return False
         # if the vertices differ at exactly 1 entry, the dot product is exactly d-2
         # that is because all entries are in {-1,1}
-        if np.dot(shared_incidences[0], shared_incidences[1]) == self.dimension - 2:
+        if np.dot(shared_incidences[0], shared_incidences[1]) == self.dim - 2:
             return True
         return False
 
@@ -232,16 +232,16 @@ class Polytope(object):
 
         if halfspaces is not None:
             self.halfspaces = halfspaces
-            self.dimension = halfspaces[0][0].dimension
+            self.dim = halfspaces[0][0].dim
             self.poly = self.poly_from_constraints(halfspaces)
             self.vertices = self.vertices_from_poly()
 
         elif vertices:
             v = vertices.pop()
-            self.dimension = v.dim
-            self.vertices = vertices
-            self.vertices.add(v)
+            self.dim = v.dim
+            vertices.add(v)
             self.poly = self.poly_from_vertices(vertices)
+            self.vertices = self.vertices_from_poly()
             self.hyperplanes = self.hyperplanes_from_poly()
             self.halfspaces = zip(self.hyperplanes, [1] * len(self.hyperplanes))
         else:
@@ -264,7 +264,7 @@ class Polytope(object):
 
     def poly_from_constraints(self, halfspaces):
         # Create PPL variables.
-        x = [Variable(i) for i in range(self.dimension)]
+        x = [Variable(i) for i in range(self.dim)]
 
         # Init constraint system.
         constraints = Constraint_System()
@@ -274,18 +274,18 @@ class Polytope(object):
         for hyp, orient in halfspaces:
 
             if orient == -1:
-                constraints.insert(sum(hyp.a[i] * x[i] for i in range(self.dimension)) + hyp.b <= 0)
+                constraints.insert(sum(hyp.a[i] * x[i] for i in range(self.dim)) + hyp.b <= 0)
             elif orient == 1:
-                constraints.insert(sum(hyp.a[i] * x[i] for i in range(self.dimension)) + hyp.b >= 0)
+                constraints.insert(sum(hyp.a[i] * x[i] for i in range(self.dim)) + hyp.b >= 0)
             elif orient == 0:
-                constraints.insert(sum(hyp.a[i] * x[i] for i in range(self.dimension)) + hyp.b == 0)
+                constraints.insert(sum(hyp.a[i] * x[i] for i in range(self.dim)) + hyp.b == 0)
 
         # Build PPL polyhedra.
         return C_Polyhedron(constraints)
 
     def poly_from_vertices(self, vertices):
         # Create PPL variables.
-        x = [Variable(i) for i in range(self.dimension)]
+        x = [Variable(i) for i in range(self.dim)]
 
         # Init constraint system.
         generators = Generator_System()
@@ -314,16 +314,16 @@ class Polytope(object):
 
     def add_constraint(self, halfspace):
         # Create PPL variables.
-        x = [Variable(i) for i in range(self.dimension)]
+        x = [Variable(i) for i in range(self.dim)]
         if halfspace[1] == -1:
             self.poly.add_constraint(
-                sum(halfspace[0].a[i] * x[i] for i in range(self.dimension)) + halfspace[0].b <= 0)
+                sum(halfspace[0].a[i] * x[i] for i in range(self.dim)) + halfspace[0].b <= 0)
         elif halfspace[1] == 1:
             self.poly.add_constraint(
-                sum(halfspace[0].a[i] * x[i] for i in range(self.dimension)) + halfspace[0].b >= 0)
+                sum(halfspace[0].a[i] * x[i] for i in range(self.dim)) + halfspace[0].b >= 0)
         elif halfspace[1] == 0:
             self.poly.add_constraint(
-                sum(halfspace[0].a[i] * x[i] for i in range(self.dimension)) + halfspace[0].b == 0)
+                sum(halfspace[0].a[i] * x[i] for i in range(self.dim)) + halfspace[0].b == 0)
         self.hyperplanes = self.hyperplanes_from_poly()
         self.halfspaces.append(halfspace)
         self.vertices = self.vertices_from_poly()
