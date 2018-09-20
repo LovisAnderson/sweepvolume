@@ -12,7 +12,7 @@ import logging
 import numpy as np
 from ppl import (Variable, point,
                  Constraint_System, Generator_System,
-                 C_Polyhedron, Poly_Con_Relation)
+                 C_Polyhedron, Poly_Con_Relation, Poly_Gen_Relation)
 from scipy.spatial import ConvexHull
 
 
@@ -327,6 +327,9 @@ class Polytope(object):
         self.hyperplanes = self.hyperplanes_from_poly()
         self.halfspaces.append(halfspace)
         self.vertices = self.vertices_from_poly()
+
+    def point_in_poly(self, point):
+        return self.poly.relation_with(point.ppl).implies(Poly_Gen_Relation.subsumes())
 
 
 def vector_distance(vector_1, vector_2, absolute_value=True):
