@@ -1,7 +1,7 @@
 # Sweep-Plane Volume Algorithm
 The package can compute the sweep-plane volume function for a union of polytopes.
  A short paper about it can be found here
- * <https://opus4.kobv.de/opus4-zib/frontdoor/index/index/docId/6948>
+ * [ZIB-Report](https://opus4.kobv.de/opus4-zib/frontdoor/index/index/docId/6948)
 
 The algorithm was also part of my master thesis and anyone who is interested in that, should contact me.
 ## Installation
@@ -15,6 +15,9 @@ pplpy 0.7 and gmpy2. See <https://github.com/videlec/pplpy/issues/36>.
 ```python
 python setup.py install
 ```
+
+Alternatively you can use the bash shell script setup.sh
+
 ## Usage
 This package contains a two-stage algorithm. 
 - In the first stage you create a cell decomposition object.
