@@ -11,7 +11,7 @@ import numpy as np
 
 
 def test_position():
-    from ..geometry import Vertex, Hyperplane
+    from sweepvolume.geometry import Vertex, Hyperplane
     v1 = Vertex.vertex_from_coordinates(np.array([1., 1., 1.]) / 2.)
     v2 = Vertex.vertex_from_coordinates(np.array([1., 1., 0.]) / 2.)
     v3 = Vertex.vertex_from_coordinates(np.array([1., 1., 1.]) / 4.)
@@ -22,7 +22,7 @@ def test_position():
 
 
 def test_vector_distance():
-    from ..geometry import vector_distance
+    from sweepvolume.geometry import vector_distance
     v1 = np.array([1, 0])
     v2 = np.array([0, 1])
     v3 = np.array([1, 1])

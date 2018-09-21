@@ -8,9 +8,9 @@
 #                  http://www.gnu.org/licenses/
 # *****************************************************************************
 import pytest
-from ..geometry import Hyperplane
+from sweepvolume.geometry import Hyperplane
 import numpy as np
-from ..cell_decomposition import Cell_Decomposition
+from sweepvolume.cell_decomposition import Cell_Decomposition
 
 
 @pytest.fixture

@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 config = {
     'name': 'sweepvolume',
@@ -7,8 +7,11 @@ config = {
     'author_email': 'lovisanderson@gmail.com',
     'version': '0.1',
     'license': 'GPL',
-    'packages': find_packages(),
+    'packages': ['sweepvolume'],
+    'package_dir': {'sweepvolume': 'sweepvolume'},
     'install_requires': [
+        'Cython==0.28.5',
+        'cysignals==1.7.2',
         'graphviz==0.9',
         'logging==0.4.9.6',
         'matplotlib==2.2.3',

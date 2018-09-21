@@ -7,7 +7,7 @@
 #  the License, or (at youroption) any later version.
 #                  http://www.gnu.org/licenses/
 # *****************************************************************************
-from ..sweep import Sweep
+from sweepvolume.sweep import Sweep
 
 import numpy as np
 import networkx as nx

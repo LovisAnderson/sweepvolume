@@ -8,15 +8,16 @@ The algorithm was also part of my master thesis and anyone who is interested in 
 This package needs the library pplpy. There are some issues in between python 2.7,
 pplpy 0.7 and gmpy2. See <https://github.com/videlec/pplpy/issues/36>.
  For that reason you need to first install gmpy2 via
- ```
+ ``
  pip install gmpy2==2.1.0a1 --no-binary ":all:" [--user]
- ```
+ ``
  You can then install the package by invoking
-```python
-python setup.py install
-```
+``
+pip install /path/to/project
+``
 
 Alternatively you can use the bash shell script setup.sh
+ which installs sweepvolume into its own virtual environment.
 
 ## Usage
 This package contains a two-stage algorithm. 

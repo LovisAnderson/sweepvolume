@@ -7,9 +7,9 @@
 #  the License, or (at youroption) any later version.
 #                  http://www.gnu.org/licenses/
 # *****************************************************************************
-from ..cell_decomposition import Cell_Decomposition
-from ..sweep import Sweep
-from ..geometry import Hyperplane
+from sweepvolume.cell_decomposition import Cell_Decomposition
+from sweepvolume.sweep import Sweep
+from sweepvolume.geometry import Hyperplane
 
 import numpy as np
 
