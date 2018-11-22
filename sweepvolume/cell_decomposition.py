@@ -37,11 +37,6 @@ class Cell_Decomposition(object):
                              Given as list (length dimension) of lists (length 2) which give lower
                              bound upper bound for each dimension.
         """
-        """
-       
-        :param hyperplanes:
-        :param polytope_vectors: 
-        """
         self.polytope_vectors = polytope_vectors
         self.hyperplanes = np.array(hyperplanes)
         self.nr_of_hyperplanes = len(hyperplanes)
@@ -61,7 +56,6 @@ class Cell_Decomposition(object):
         Main method for calculating vertices and their incidences in the decomposition.
         :return: vertices, a list of vertices with incidences saved
         """
-
         events = dict()
         for combination in itertools.combinations(range(self.nr_of_hyperplanes), self.dim):
             vertex = self.solve_les(combination)
@@ -69,14 +63,14 @@ class Cell_Decomposition(object):
                 continue
             if not self.inside_bbox(vertex):
                 continue
-            if events.get(hash(vertex)):
-                e = events[hash(vertex)]
+            if events.get(vertex):
+                e = events[vertex]
                 e.incidences.update(combination)
             else:
                 e = Event(vertex)
                 e.incidences.update(combination)
                 e.set_position_vector(self.hyperplanes)
-                events[hash(vertex)] = e
+                events[vertex] = e
         return events.values()
 
     def inside_bbox(self, vertex):
