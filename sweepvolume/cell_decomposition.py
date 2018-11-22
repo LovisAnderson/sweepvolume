@@ -94,6 +94,10 @@ class Cell_Decomposition(object):
 
         events = set()
         for event in self.possible_events:
+            for polytope_vec in self.polytope_vectors:
+                #If event is in polytope there is no real volume change at event and we can skip it.
+                if event.is_in_polytope_interior(polytope_vec):
+                    continue
             event.incident_polytopes = event.polytope_incidences(self.polytope_vectors)
             event.cones = self.vertex_cones(event) if len(event.incident_polytopes) > 0 else []
             if len(event.cones) > 0:
