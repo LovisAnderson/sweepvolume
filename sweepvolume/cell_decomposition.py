@@ -56,7 +56,6 @@ class Cell_Decomposition(object):
         Main method for calculating vertices and their incidences in the decomposition.
         :return: vertices, a list of vertices with incidences saved
         """
-
         events = dict()
         for combination in itertools.combinations(range(self.nr_of_hyperplanes), self.dim):
             vertex = self.solve_les(combination)
@@ -64,14 +63,14 @@ class Cell_Decomposition(object):
                 continue
             if not self.inside_bbox(vertex):
                 continue
-            if events.get(hash(vertex)):
-                e = events[hash(vertex)]
+            if events.get(vertex):
+                e = events[vertex]
                 e.incidences.update(combination)
             else:
                 e = Event(vertex)
                 e.incidences.update(combination)
                 e.set_position_vector(self.hyperplanes)
-                events[hash(vertex)] = e
+                events[vertex] = e
         return events.values()
 
     def inside_bbox(self, vertex):
@@ -95,6 +94,10 @@ class Cell_Decomposition(object):
 
         events = set()
         for event in self.possible_events:
+            for polytope_vec in self.polytope_vectors:
+                #If event is in polytope there is no real volume change at event and we can skip it.
+                if event.is_in_polytope_interior(polytope_vec):
+                    continue
             event.incident_polytopes = event.polytope_incidences(self.polytope_vectors)
             event.cones = self.vertex_cones(event) if len(event.incident_polytopes) > 0 else []
             if len(event.cones) > 0:

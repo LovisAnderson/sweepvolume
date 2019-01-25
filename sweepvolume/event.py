@@ -31,9 +31,10 @@ class Event(object):
 
     def update_position_vector(self, hyperplanes):
         """
-        :param hyperplanes: list of hyperplanes for which
-         the updated position vector is to be calculated
-
+        Method updates position vector by appending to self.position_vector the position
+        relative to the hyperplanes in the input (by input order).
+        :param hyperplanes: list of hyperplanes for which the updated position vector
+         is to be calculated.
         """
 
         for hyperplane in hyperplanes[len(self.position_vector):]:
@@ -46,6 +47,13 @@ class Event(object):
             if self.vector_matches_position_vector(polytope_vectors[polytope_index]):
                 incidences.append(polytope_index)
         return incidences
+
+    def is_in_polytope_interior(self, polytope_vector):
+        # Method assumes that vertex is in polytope.
+        for hyperplane_index, orientation in polytope_vector:
+            if self.position_vector[hyperplane_index] == 0:
+                return False
+        return True
 
     def update_polytope_incidences(self, polytope_vectors):
         """
