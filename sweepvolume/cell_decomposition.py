@@ -37,11 +37,6 @@ class Cell_Decomposition(object):
                              Given as list (length dimension) of lists (length 2) which give lower
                              bound upper bound for each dimension.
         """
-        """
-       
-        :param hyperplanes:
-        :param polytope_vectors: 
-        """
         self.polytope_vectors = polytope_vectors
         self.hyperplanes = np.array(hyperplanes)
         self.nr_of_hyperplanes = len(hyperplanes)
