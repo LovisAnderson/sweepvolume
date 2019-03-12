@@ -8,7 +8,7 @@
 #                  http://www.gnu.org/licenses/
 # *****************************************************************************
 import numpy as np
-from event import Event
+from .event import Event
 
 import networkx as nx
 from graphviz import Digraph

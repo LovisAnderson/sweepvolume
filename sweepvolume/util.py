@@ -9,7 +9,7 @@
 # *****************************************************************************
 from scipy.spatial import ConvexHull
 
-from geometry import Polytope
+from .geometry import Polytope
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt

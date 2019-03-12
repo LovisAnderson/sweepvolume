@@ -1,4 +1,5 @@
 from setuptools import setup
+import sys
 
 config = {
     'name': 'sweepvolume',
@@ -7,6 +8,7 @@ config = {
     'author_email': 'lovisanderson@gmail.com',
     'version': '0.1',
     'license': 'GPL',
+    'include_dirs': ['sweepvolume'] + sys.path,
     'packages': ['sweepvolume'],
     'package_dir': {'sweepvolume': 'sweepvolume'},
     'install_requires': [

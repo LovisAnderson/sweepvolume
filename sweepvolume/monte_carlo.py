@@ -8,7 +8,7 @@
 #                  http://www.gnu.org/licenses/
 #*****************************************************************************
 import numpy as np
-from geometry import Polytope, Vertex
+from .geometry import Polytope, Vertex
 
 
 class MonteCarloVolume(object):

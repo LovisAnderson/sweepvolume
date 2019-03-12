@@ -17,9 +17,9 @@ import os
 import numpy as np
 import sympy
 
-from geometry import Hyperplane, Polytope, Cone
+from .geometry import Hyperplane, Polytope, Cone
 
-from event import Event
+from .event import Event
 
 
 class Cell_Decomposition(object):
