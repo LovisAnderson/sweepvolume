@@ -330,25 +330,25 @@ def hole_4d():
     p5 = Hyperplane(a2, -1)
     p6 = Hyperplane(a3, -1)
     p7 = Hyperplane(a4, 0)
-    P1 = set(zip(range(8), [-1] * 8))
+    P1 = set(list(zip(range(8), [-1] * 8)))
 
     q1 = Hyperplane(a1, -1)
     q2 = Hyperplane(a2, 0)
     q3 = Hyperplane(a3, 0)
     q4 = Hyperplane(a4, -1)
-    P2 = set(zip(range(4), [-1] * 4) + zip(range(8, 12), [-1] * 4))
+    P2 = set(list(zip(range(4), [-1] * 4)) + list(zip(range(8, 12), [-1] * 4)))
 
     r1 = Hyperplane(a1, -2)
     r2 = Hyperplane(a2, 1)
     r3 = Hyperplane(a3, -1)
     r4 = Hyperplane(a4, 0)
-    P3 = set(zip(range(4), [-1] * 4) + zip(range(12, 16), [-1] * 4))
+    P3 = set(list(zip(range(4), [-1] * 4)) + list(zip(range(12, 16), [-1] * 4)))
 
     s1 = Hyperplane(a1, -1)
     s2 = Hyperplane(a2, 0)
     s3 = Hyperplane(a3, -2)
     s4 = Hyperplane(a4, 1)
-    P4 = set(zip(range(4), [-1] * 4) + zip(range(16, 20), [-1] * 4))
+    P4 = set(list(zip(range(4), [-1] * 4)) + list(zip(range(16, 20), [-1] * 4)))
     hyperplanes = [p0, p1, p2, p3, p4, p5, p6, p7, q1, q2, q3, q4, r1, r2, r3, r4, s1, s2, s3, s4]
 
     return Cell_Decomposition(hyperplanes, [P1, P2, P3, P4])
