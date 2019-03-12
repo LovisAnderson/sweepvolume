@@ -362,12 +362,12 @@ class Cell_Decomposition(object):
         return
 
     def as_dict(self, initialized=True):
-        hyperplanes = map(lambda hyp: repr(np.append(hyp.a, hyp.b)), self.hyperplanes)
+        hyperplanes = list(map(lambda hyp: repr(np.append(hyp.a, hyp.b)), self.hyperplanes))
         events = [str(event) for event in self.events] if initialized else []
         cd_dict = {
             'hyperplanes': hyperplanes,
             'events': events,
-            'polytope_vectors': (map(lambda p: list(p), self.polytope_vectors)),
+            'polytope_vectors': list(map(lambda p: list(p), self.polytope_vectors)),
             'dimension': self.dim
         }
         return cd_dict
