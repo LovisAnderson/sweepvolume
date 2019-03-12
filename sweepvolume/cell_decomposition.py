@@ -84,7 +84,7 @@ class Cell_Decomposition(object):
 
     def solve_les(self, hyperplane_indices):
         hyperplanes = self.hyperplanes[np.array(hyperplane_indices)]
-        p = Polytope(zip(hyperplanes, [0] * self.dim))
+        p = Polytope(list(zip(hyperplanes, [0] * self.dim)))
         if len(p.vertices) == 1:
             return p.vertices[0]
         else:
@@ -136,10 +136,10 @@ class Cell_Decomposition(object):
         for combination in itertools.product([-1, 1], repeat=len(event.incidences)):
             cone = []
             incidence_dict = {}
-            for i in range(len(combination)):
-                incidence_dict[incidences[i]] = combination[i]
-                cone_pos_vector[incidences[i]] = combination[i]
-                cone.append((incidences[i], combination[i]))
+            for i, orientation in enumerate(combination):
+                incidence_dict[incidences[i]] = orientation
+                cone_pos_vector[incidences[i]] = orientation
+                cone.append((incidences[i], orientation))
             if self.is_legal_cone(cone_pos_vector, event):
                 if len(event.incidences) > self.dim:
                     # Test if cone is empty, if so we can skip it
@@ -214,7 +214,7 @@ class Cell_Decomposition(object):
             polytope_vertices = Polytope(polytope_halfspaces).vertices
         hyperplanes = [hyperplane for hyperplane, orientation in polytope_halfspaces]
         orientations = [orientation for hyperplane, orientation in polytope_halfspaces]
-        return hyperplanes, zip(np.arange(len(hyperplanes)), orientations)
+        return hyperplanes, list(zip(np.arange(len(hyperplanes)), orientations))
 
     def first_rows_independent(self, halfspaces):
         """

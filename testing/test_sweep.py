@@ -34,11 +34,10 @@ def test_simplex_cube_overlapping_2d(cube_simplex_overlapping_2d):
 
 
 def test_unbounded_non_regular(unbounded_non_regular):
-    s = Sweep(unbounded_non_regular.events, sweep_plane=np.array([1, 0]))
-    assert s.calculate_volume(1) == 1
-    assert s.calculate_volume(2) == 4
-    assert s.calculate_volume(400) == 400 ** 2
-
+    s = Sweep(unbounded_non_regular.events, sweep_plane=np.array([0, 1]))
+    assert round(s.calculate_volume(1), 3) == 1
+    assert round(s.calculate_volume(2), 3) == 4
+    assert round(s.calculate_volume(400), 3) == 400 ** 2
 
 def test_simplex_in_cube(simplex_in_cube):
     s = Sweep(simplex_in_cube.events)
@@ -52,7 +51,7 @@ def test_precision(cube_simplex_overlapping_3d_imprecise):
 
 def test_overlapping_simplices(overlapping_simplices_2):
     s = Sweep(overlapping_simplices_2.events)
-    assert round(s.calculate_volume(), 3) == round((8 ** 3) / 6 + 0.5, 3)
+    assert round(s.calculate_volume(), 3) == round((8 ** 3) / 6. + 0.5 / 3, 3)
 
 
 def test_nodes_and_edges(simplex):

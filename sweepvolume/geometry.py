@@ -196,7 +196,7 @@ class Cone(object):
         :return: True/False
         """
         shared_incidences = [[], []]
-        for inc, orient in self.incidences.iteritems():
+        for inc, orient in self.incidences.items():
             orient2 = cone.incidences.get(inc)
             if orient2:
                 shared_incidences[0].append(orient)
