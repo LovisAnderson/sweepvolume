@@ -104,3 +104,11 @@ def test_both_halfspace_restriction(simplex_in_cube):
     cut_plane = Hyperplane(np.array([1, 0]), 1)
     simplex_in_cube.restrict_to_halfspace(cut_plane, -1)
     assert len(simplex_in_cube.events) == 0
+
+
+def test_as_dict_json_compatible(hole_4d):
+    """
+    Test just dumps the cell decomposition and succeeds if no error is thrown.
+    """
+    import json
+    print(json.dumps(hole_4d.as_dict(), sort_keys=True, indent=4, separators=(',', ': ')))
