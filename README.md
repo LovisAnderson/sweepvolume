@@ -5,19 +5,17 @@ The package can compute the sweep-plane volume function for a union of polytopes
 
 The algorithm was also part of my master thesis and anyone who is interested in that, should contact me.
 ## Installation
-This package needs the library pplpy. There are some issues in between python 2.7,
-pplpy 0.7 and gmpy2. See <https://github.com/videlec/pplpy/issues/36>.
- For that reason you need to first install gmpy2 via
+This package needs the python wrapper for ppl, which is called pplpy. Pplpy needs a specific version of gmpy2,
+ see <https://github.com/videlec/pplpy/issues/36>, which has to be installed via
  ``
  pip install gmpy2==2.1.0a1 --no-binary ":all:" [--user]
  ``
- You can then install the package by invoking
+ You can then install sweepvolume by invoking
 ``
 pip install /path/to/project
 ``
 
-Alternatively you can use the bash shell script setup.sh
- which installs sweepvolume into its own virtual environment.
+Alternatively you can use the bash shell script setup.sh.
 
 ## Usage
 This package contains a two-stage algorithm. 
