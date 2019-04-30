@@ -236,7 +236,7 @@ class Polytope(object):
             self.poly = self.poly_from_constraints(halfspaces)
             self.vertices = self.vertices_from_poly()
 
-        elif vertices:
+        elif vertices is not None:
             v = vertices.pop()
             self.dim = v.dim
             vertices.add(v)
