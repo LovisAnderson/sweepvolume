@@ -45,7 +45,7 @@ class Hyperplane(object):
 
     def normalize(self):
         """
-        norms hyperplane such that norm=1 and b>=0. returns
+        norms hyperplane such that b>=0.
         :return: True if hyperplane had to be flipped and False elsewise
         """
         if self.b < 0:
