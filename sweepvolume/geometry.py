@@ -13,6 +13,7 @@ import numpy as np
 from ppl import (Variable, point,
                  Constraint_System, Generator_System,
                  C_Polyhedron, Poly_Con_Relation, Poly_Gen_Relation)
+from gmpy2 import mpz, gcd, divexact
 from scipy.spatial import ConvexHull
 
 
@@ -27,10 +28,13 @@ class Hyperplane(object):
         self.dim = a.shape[0]
         self.a = a
         self.b = b
-        if not (all([float(a_i).is_integer() for a_i in a]) and float(b).is_integer()):
+        if not (
+                all(isinstance(a_i, mpz) for a_i in np.append(a, b))
+        ):
             self.convert_to_integer()
+        self.minimial_representation()
         # norm of the composite vector (a,b)
-        self.a_norm = np.linalg.norm(self.a)
+        self.a_norm = np.linalg.norm([float(a_i) for a_i in self.a])
         self.matrix = self.as_matrix()
 
     def is_active(self, vertex):
@@ -55,16 +59,21 @@ class Hyperplane(object):
         return np.linalg.norm(np.append(self.a.astype(float), float(self.b)))
 
     def convert_to_integer(self):
+        if all([float(a_i).is_integer() for a_i in self.a]) and float(self.b).is_integer():
+            self.a = np.array([mpz(a_i) for a_i in self.a])
+            self.b = mpz(self.b)
+            self.integer = True
+            return
         k = 1e9
         norm = self.norm()
         self.a = self.a / norm
-        self.a = np.array([round(k * a) for a in self.a])
-        self.b = round(k * (self.b / norm))
+        self.a = np.array([mpz(k * a) for a in self.a])
+        self.b = mpz(k * (self.b / norm))
         self.integer = True
 
     def as_matrix(self):
-        import sympy
-        return sympy.Matrix(self.a)
+        import mpmath
+        return mpmath.matrix(self.a)
 
     def pertubate(self):
         sigma = np.array([1e-6] * self.dim)
@@ -72,15 +81,31 @@ class Hyperplane(object):
         a = np.random.multivariate_normal(self.a / self.a_norm, covariance)
         return Hyperplane(a, self.b / self.a_norm)
 
+    def minimial_representation(self):
+        gcd = self.gcd()
+        self.divide_by(gcd)
+
+    def gcd(self):
+        hyperplane_gcd = self.a[0]
+        for a_i in np.append(self.a[1:], self.b):
+            hyperplane_gcd = gcd(hyperplane_gcd, a_i)
+        return hyperplane_gcd
+
+    def divide_by(self, div):
+        self.a = np.array([divexact(a_i, div) for a_i in self.a])
+        self.b = divexact(self.b, div)
+        self.matrix = self.as_matrix()
+        self.a_norm = np.linalg.norm([float(a_i) for a_i in self.a])
+
     def __str__(self):
         """
         Output method.
         """
 
-        cx = ['{:.0f}*x{}'.format(c, i) for i, c in enumerate(self.a, 1)]
+        cx = ['{}*x{}'.format(c, i) for i, c in enumerate(self.a, 1)]
 
         outputStr = " + ".join(cx)
-        outputStr += " + {:.0f} == 0".format(self.b)
+        outputStr += " + {} == 0".format(self.b)
 
         return outputStr
 
@@ -306,8 +331,8 @@ class Polytope(object):
         # constraints in ppl are saved as of the form ax + b >= 0
 
         for constraint in self.poly.minimized_constraints():
-            a = np.array(constraint.coefficients()).astype(float)
-            b = float(constraint.inhomogeneous_term())
+            a = np.array(constraint.coefficients())
+            b = constraint.inhomogeneous_term()
             hyperplane = Hyperplane(a, b)
             hyperplanes.append(hyperplane)
         return hyperplanes

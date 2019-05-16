@@ -8,10 +8,10 @@
 #                  http://www.gnu.org/licenses/
 # *****************************************************************************
 import numpy as np
-
+from sweepvolume.geometry import Vertex, Hyperplane, vector_distance
 
 def test_position():
-    from sweepvolume.geometry import Vertex, Hyperplane
+
     v1 = Vertex.vertex_from_coordinates(np.array([1., 1., 1.]) / 2.)
     v2 = Vertex.vertex_from_coordinates(np.array([1., 1., 0.]) / 2.)
     v3 = Vertex.vertex_from_coordinates(np.array([1., 1., 1.]) / 4.)
@@ -22,10 +22,21 @@ def test_position():
 
 
 def test_vector_distance():
-    from sweepvolume.geometry import vector_distance
+
     v1 = np.array([1, 0])
     v2 = np.array([0, 1])
     v3 = np.array([1, 1])
     assert vector_distance(v1, v2) == 1
     assert vector_distance(v1, v1) == 0
     assert np.isclose(vector_distance(v1, v3), 1 - np.reciprocal(np.sqrt(2)))
+
+
+def test_minimal_representation():
+    from gmpy2 import mpz
+    a_1 = mpz(489893 * 4)
+    a_2 = mpz((2**16) * 4)
+    b = mpz((2**16 + 1) * 4)
+    h = Hyperplane(np.array([a_1, a_2]), b)
+    assert h.a[0] == mpz(489893)
+    assert h.a[1] == mpz(2**16)
+    assert h.b == mpz((2**16 + 1))

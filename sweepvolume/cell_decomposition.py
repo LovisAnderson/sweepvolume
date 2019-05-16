@@ -14,6 +14,7 @@ import logging
 import json
 import os
 
+from gmpy2 import mpz
 import numpy as np
 import sympy
 
@@ -225,8 +226,9 @@ class Cell_Decomposition(object):
         """
         first = []
         last = []
-        mat = np.array([self.hyperplanes[hyperplane_ind].a for hyperplane_ind, _ in halfspaces])
-        _, inds = sympy.Matrix(mat).T.rref()
+
+        mat = self.hyperplane_matrix([hyperplane for hyperplane, _ in halfspaces])
+        _, inds = mat.T.rref()
         if len(inds) != self.dim:
             logging.warning('Not d many linear independent normals in regularization step')
         for index in range(len(halfspaces)):
@@ -235,6 +237,10 @@ class Cell_Decomposition(object):
             else:
                 last.append(halfspaces[index])
         return first + last
+
+    def hyperplane_matrix(self, hyperplane_indices):
+        hyperplanes = [self.hyperplanes[index] for index in hyperplane_indices]
+        return sympy.Matrix([list(hyperplane.a) for hyperplane in hyperplanes])
 
     @staticmethod
     def compute_halfspace_shift(halfspace, vertices):
@@ -245,19 +251,18 @@ class Cell_Decomposition(object):
         :param vertices: list of vertices to be contained in open halfspace
         :return: Tuple of (Hyperplane, orientation)
         """
-        shifting_distance = round(np.linalg.norm(halfspace[0].a))
+        shifting_distance = mpz(halfspace[0].a_norm)
         a = halfspace[0].a
         min_b = max_b = - halfspace[0].b
         for vertex in vertices:
-            shift = np.dot(a, vertex.coordinates)
-            min_b = min(min_b, shift)
-            max_b = max(max_b, shift)
+            sharp_b = np.dot(a, vertex.coordinates)
+            min_b = min(min_b, sharp_b)
+            max_b = max(max_b, sharp_b)
         if halfspace[1] == -1:
             b = round(max_b + shifting_distance)
         else:
             b = round(min_b - shifting_distance)
         hyperplane = Hyperplane(a, -b)
-        hyperplane.integer = True
         return (hyperplane, halfspace[1])
 
     def restrict_to_halfspace(self, hyperplane, orientation):
