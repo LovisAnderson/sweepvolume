@@ -34,7 +34,9 @@ def _arguments():
             "--sweepPlane",
             default=None,
             nargs="*",
-            type=str
+            type=str,
+            help="The direction of the sweep. If none is given a random direction is chosen."
+                 "Format is <--sweepPlane 1 1 0.5>. Make sure that the dimension is correct."
         )
     }
 
