@@ -23,8 +23,8 @@ def polytopes_from_json(filepath):
     """
     Method to read polytope points from JSON file.
      Input format is {disj: {polyID1: [...], ..., polyIDk: [...]}}
-     If polytopes are given in outer description the elements polyID: [[a1, ..., ad, b],...,[...]]
-     correspond to the halfspace a1x1 + ... + adxd + b >= 0
+     The elements polyID: [[a1, ..., ad, b],...,[...]]
+     correspond to the halfspace a1x1 + ... + adxd + b <= 0
     """
     polys = []
     disj = load_json(filepath)

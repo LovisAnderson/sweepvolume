@@ -10,3 +10,9 @@ def test_dataloader():
     sweep = Sweep(cell_decomposition.events)
     m_vol = MonteCarloVolume(polytopes)
     assert np.abs((m_vol.volume - sweep.calculate_volume())/ m_vol.volume) < 0.2
+
+
+def test_dataloader_2():
+    cell_decomposition = get_cell_decomposition('test2.json')
+    sweep = Sweep(cell_decomposition.events)
+    assert np.abs(1 - sweep.calculate_volume()) < 0.001

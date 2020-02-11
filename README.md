@@ -27,7 +27,7 @@ You can compute the sweep volume of a union of polytops for polytopes specified 
 ```python sweepvolume/main.py --polytopesFile testing/test.json```
 
 Please take a look on the file testing/test.json for an example of the format in which the polytopes have to be specified.
-Polytopes in json should be given as lists of constraints whereby `[a_1, ..., a_n, b]` corresponds to the constraint a_1 x_1 + ... + a_n x_n + b >= 0.
+Polytopes in json should be given as lists of constraints whereby `[a_1, ..., a_n, b]` corresponds to the constraint a_1 x_1 + ... + a_n x_n + b <= 0.
 
 ### In code
 This package contains a two-stage algorithm. 
