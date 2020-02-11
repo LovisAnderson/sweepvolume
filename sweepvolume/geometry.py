@@ -346,3 +346,20 @@ def vector_distance(vector_1, vector_2, absolute_value=True):
         return 1 - abs(np.dot(a1_normed, a2_normed))
     else:
         return 1 - np.dot(a1_normed, a2_normed)
+
+
+def norm_halfspace(halfspace):
+    """
+    Method norms halfspace in a way that offset is non-negative
+    :param halfspace: a tuple of (hyperplane, orientation) whereby -1 represents <= and +1 >= for
+    the orientation.
+    :return: Normed halfspace with positive offset
+    """
+    hyperplane, orientation = halfspace[0], halfspace[1]
+    if hyperplane.b < 0:
+        hyperplane.a = -hyperplane.a
+        hyperplane.b = -hyperplane.b
+        hyperplane.matrix = hyperplane.as_matrix()
+        return hyperplane, -orientation
+    else:
+        return halfspace
