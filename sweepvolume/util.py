@@ -9,7 +9,7 @@
 # *****************************************************************************
 from scipy.spatial import ConvexHull
 
-from .geometry import Polytope
+from sweepvolume.geometry import Polytope
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -215,3 +215,20 @@ def get_limits(polytopes_vertices):
                        max(flat) + frame])
 
     return limits
+
+
+def plot_sweep(sweep, points=10000):
+    start_sweep = sweep.sorted_events[0][1]
+    end_sweep = sweep.sorted_events[-1][1]
+    sweep_length = end_sweep - start_sweep
+    step_length = sweep_length / points
+    start_plot = start_sweep - 50*step_length
+    end_plot = end_sweep + 50*step_length
+    x = np.arange(start_plot, end_plot, step_length)
+    y = sweep.calculate_volumes(x)
+    fig, ax = plt.subplots()
+    ax.plot(x, y)
+
+    ax.set(xlabel='Sweep-Time', ylabel='Volume',
+           title=f'Sweep graph for direction {sweep.sweep_plane}')
+    plt.show()
