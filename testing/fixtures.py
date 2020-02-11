@@ -11,7 +11,7 @@ import pytest
 from sweepvolume.geometry import Hyperplane
 import numpy as np
 from sweepvolume.cell_decomposition import Cell_Decomposition
-
+from ordered_set import OrderedSet
 
 @pytest.fixture
 def paper_example():
@@ -231,6 +231,7 @@ def overlapping_simplices_2():
 
 @pytest.fixture
 def hole_2d():
+    hyperplanes = OrderedSet()
     a1 = np.array([1, 0])
     a2 = np.array([-1, 0])
 
@@ -247,22 +248,30 @@ def hole_2d():
     q2 = Hyperplane(a2, 0)
     q3 = Hyperplane(a3, 0)
     q4 = Hyperplane(a4, -1)
-    P2 = set(zip(range(4, 8), [-1] * 4))
+    P2 = set()
+    for h in [q1, q2, q3, q4]:
+        ind = hyperplanes.add(h)
+        P2.add((ind, -1))
 
     r1 = Hyperplane(a1, -2)
     r2 = Hyperplane(a2, 1)
     r3 = Hyperplane(a3, -1)
     r4 = Hyperplane(a4, 0)
-    P3 = set(zip(range(8, 12), [-1] * 4))
+    P3 = set()
+    for h in [r1, r2, r3, r4]:
+        ind = hyperplanes.add(h)
+        P3.add((ind, -1))
 
     s1 = Hyperplane(a1, -1)
     s2 = Hyperplane(a2, 0)
     s3 = Hyperplane(a3, -2)
     s4 = Hyperplane(a4, 1)
-    P4 = set(zip(range(12, 16), [-1] * 4))
+    P4 = set()
+    for h in [s1, s2, s3, s4]:
+        ind = hyperplanes.add(h)
+        P4.add((ind, -1))
 
-    hyperplanes = [p1, p2, p3, p4, q1, q2, q3, q4, r1, r2, r3, r4, s1, s2, s3, s4]
-    return (Cell_Decomposition(hyperplanes, [P1, P2, P3, P4]))
+    return Cell_Decomposition(hyperplanes, [P1, P2, P3, P4])
 
 
 @pytest.fixture
@@ -309,6 +318,7 @@ def hole_3d():
 
 @pytest.fixture
 def hole_4d():
+    hyperplanes = OrderedSet()
     a1 = np.array([1, 0, 0, 0])
     a2 = np.array([-1, 0, 0, 0])
 
@@ -330,26 +340,39 @@ def hole_4d():
     p5 = Hyperplane(a2, -1)
     p6 = Hyperplane(a3, -1)
     p7 = Hyperplane(a4, 0)
-    P1 = set(list(zip(range(8), [-1] * 8)))
+
+    P1 = set()
+    for h in [p0, p1, p2, p3, p4, p5, p6, p7]:
+        index = hyperplanes.add(h)
+        P1.add((index, -1))
 
     q1 = Hyperplane(a1, -1)
     q2 = Hyperplane(a2, 0)
     q3 = Hyperplane(a3, 0)
     q4 = Hyperplane(a4, -1)
-    P2 = set(list(zip(range(4), [-1] * 4)) + list(zip(range(8, 12), [-1] * 4)))
+
+    P2 = set()
+    for h in [p0, p1, p2, p3, q1, q2, q3, q4]:
+        index = hyperplanes.add(h)
+        P2.add((index, -1))
 
     r1 = Hyperplane(a1, -2)
     r2 = Hyperplane(a2, 1)
     r3 = Hyperplane(a3, -1)
     r4 = Hyperplane(a4, 0)
-    P3 = set(list(zip(range(4), [-1] * 4)) + list(zip(range(12, 16), [-1] * 4)))
+    P3 = set()
+    for h in [p0, p1, p2, p3, r1, r2, r3, r4]:
+        index = hyperplanes.add(h)
+        P3.add((index, -1))
 
     s1 = Hyperplane(a1, -1)
     s2 = Hyperplane(a2, 0)
     s3 = Hyperplane(a3, -2)
     s4 = Hyperplane(a4, 1)
-    P4 = set(list(zip(range(4), [-1] * 4)) + list(zip(range(16, 20), [-1] * 4)))
-    hyperplanes = [p0, p1, p2, p3, p4, p5, p6, p7, q1, q2, q3, q4, r1, r2, r3, r4, s1, s2, s3, s4]
+    P4 = set()
+    for h in [p0, p1, p2, p3, s1, s2, s3, s4]:
+        index = hyperplanes.add(h)
+        P4.add((index, -1))
 
     return Cell_Decomposition(hyperplanes, [P1, P2, P3, P4])
 
