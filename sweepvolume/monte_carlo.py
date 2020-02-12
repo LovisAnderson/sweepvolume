@@ -7,6 +7,7 @@
 #  the License, or (at youroption) any later version.
 #                  http://www.gnu.org/licenses/
 #*****************************************************************************
+
 import numpy as np
 from .geometry import Polytope, Vertex
 

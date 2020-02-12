@@ -1,3 +1,12 @@
+# *****************************************************************************
+#       Copyright (C) 2017-2018 Lovis Anderson  <lovisanderson@gmail.com>
+#                     2017-2018 Benjamin Hiller <hiller@zib.de>
+#
+#  Distributed under the terms of the GNU General Public License (GPL)
+#  as published by the Free Software Foundation; either version 3 of
+#  the License, or (at youroption) any later version.
+#                  http://www.gnu.org/licenses/
+# *****************************************************************************
 import json
 import logging
 from sweepvolume.geometry import Hyperplane, Polytope, norm_halfspace
