@@ -15,9 +15,21 @@ This package needs the python wrapper for ppl, which is called pplpy. Pplpy need
 pip install /path/to/project
 ``
 
+You might want to checkout pips -e option which allows a in development installation. 
 Alternatively you can use the bash shell script setup.sh.
-
+### Without installation
+If you have installed the dependencies you can use the package as well but make sure that the toplevel directory is added to the PYTHONPATH. 
+You can ensure that by using set_env to set up the environment that means `source set_env` 
 ## Usage
+### Using main.py
+You can compute the sweep volume of a union of polytops for polytopes specified in a json by invoking
+
+```python sweepvolume/main.py --polytopesFile testing/test.json```
+
+Please take a look on the file testing/test.json for an example of the format in which the polytopes have to be specified.
+Polytopes in json should be given as lists of constraints whereby `[a_1, ..., a_n, b]` corresponds to the constraint a_1 x_1 + ... + a_n x_n + b <= 0.
+
+### In code
 This package contains a two-stage algorithm. 
 - In the first stage you create a cell decomposition object.
  Examples for that are to be found in testing/fixtures.py
