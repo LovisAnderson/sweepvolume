@@ -15,6 +15,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import mpl_toolkits.mplot3d as mpl3D
+import math
 import numpy as np
 import pylab as pl
 
@@ -215,3 +216,10 @@ def get_limits(polytopes_vertices):
                        max(flat) + frame])
 
     return limits
+
+
+def randomvector(n):
+    components = [np.random.normal() for i in range(n)]
+    r = math.sqrt(sum(x*x for x in components))
+    v = [x/r for x in components]
+    return v

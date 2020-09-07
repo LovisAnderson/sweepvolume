@@ -9,7 +9,7 @@
 # *****************************************************************************
 import numpy as np
 from .event import Event
-
+from .util import randomvector
 import networkx as nx
 from graphviz import Digraph
 
@@ -30,22 +30,27 @@ class Sweep(object):
             if sweep_plane is not None:
                 self.sweep_plane = sweep_plane
             else:
-                self.sweep_plane = self.random_sweep_plane(self.dim)
+                self.sweep_plane = self.random_sweep_plane(self.dim, events)
             # tuple of (event, lambda)
             self.sorted_events = self.sort_events_by_lambda(events)
         self.gammas = []
         self.sweep()
 
     @staticmethod
-    def random_sweep_plane(dim):
+    def random_sweep_plane(dim, events):
         np.random.seed(0)
-        random_orientation = np.random.choice([-1, 1], [dim])
-        return np.random.rand(dim) * random_orientation
+        nr_events = len(events)
+        for tries in range(10):
+            sweep_direction = randomvector(dim)
+            lambdas = set(np.dot(sweep_direction, event.vertex.coordinates) for event in events)
+            if len(lambdas) == nr_events:
+                return sweep_direction
+
+        raise RuntimeError('No sweep that sorts all events could be found! events: {}'.format(events))
 
     def sort_events_by_lambda(self, events):
         dtype = [('event', Event), ('lambda', float)]
         events_with_lambda = list()
-
         for event in events:
             lam = np.dot(self.sweep_plane, event.vertex.coordinates)
             events_with_lambda.append((event, lam))
