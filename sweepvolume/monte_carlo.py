@@ -9,8 +9,7 @@
 #*****************************************************************************
 
 import numpy as np
-from .geometry import Polytope, Vertex
-
+from .geometry import Polytope, Vertex, Hyperplane
 
 class MonteCarloVolume(object):
     def __init__(self, polytopes, iterations=10000):
@@ -31,7 +30,6 @@ class MonteCarloVolume(object):
         min_vector = np.array([1e+14] * self.dim)
         max_vector = np.array([-1e+14] * self.dim)
         polytope_vertices = set().union(*[poly.vertices for poly in self.polytopes])
-        from geometry import Polytope
         convex_hull = Polytope(vertices=polytope_vertices)
         for vertex in convex_hull.vertices:
             for i in range(self.dim):
@@ -67,7 +65,7 @@ class MonteCarloVolume(object):
 
 
 def test_monte_carlo():
-    from geometry import Hyperplane, Polytope
+
     a1 = np.array([1, 0])
     a2 = np.array([-1, 0])
 
